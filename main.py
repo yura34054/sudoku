@@ -1,10 +1,12 @@
-from random import choice, randint
+from random import randint
+from copy import deepcopy
 
 
 class Fuild:
 
     def __init__(self) -> None:
-        self.fuild = [[tuple((i for i in range(1, 6))) for j in range(5)] for k in range(5)]
+        self.input_fuild = [[tuple((i for i in range(1, 6))) for j in range(5)] for k in range(5)]
+        self.result = None
 
         self.solved = False
         self.failed = False
@@ -86,17 +88,36 @@ class Fuild:
 
 
         
-    def change(self):
-        pass
+    def change(self, x, y, val) -> None:
+        self.input_fuild[x][y] = val
 
-    def solve(self):
+        if self.result:
+            if self.result[x][y] == val:
+                print('hi 1')
+                self.solved = True
+                self.fuild = deepcopy(self.result)
+
+            else:
+                self.result = None
+                self.solved = False
+
+
+    def solve(self) -> None:
+        self.fuild = deepcopy(self.input_fuild)
+
+        for i in range(5):
+            for j in range(5):
+                self.update((i, j))
+
         while not self.solved:
             if not self.failed:
                 self.solve_cell()
 
             else:
-                print('shit')
-                self.solved = True
+                raise Exception
+
+        if not self.failed:
+            self.result = deepcopy(self.fuild)
 
 
     def __str__(self) -> str:
@@ -108,21 +129,32 @@ class Fuild:
             answ = ''
             for i in range(5):
                 for j in range(5):
-                    answ += str(self.fuild[i][j])
+                    answ += str(self.result[i][j])
                     answ += ' '
 
                 answ += '\n'
+
+            del self.fuild
+            self.solved = False
             return answ
 
 
         else:
-            return f'lol what {self.solved}, {self.failed}'
+            return f'lol what; solved = {self.solved}, failed = {self.failed}'
+
+        
             
 
 
 def main():
     obj = Fuild()
+    obj.change(0, 0, 1)
     print(obj)
+    obj.change(1, 1, 1)
+    print(obj)
+
+
+    
 
 
 if __name__ == '__main__':
