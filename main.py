@@ -93,13 +93,13 @@ class Fuild:
 
         if self.result:
             if self.result[x][y] == val:
-                print('hi 1')
                 self.solved = True
                 self.fuild = deepcopy(self.result)
 
             else:
-                self.result = None
+                #self.result = None
                 self.solved = False
+                self.failed = False
 
 
     def solve(self) -> None:
@@ -114,10 +114,16 @@ class Fuild:
                 self.solve_cell()
 
             else:
-                raise Exception
+                break
 
         if not self.failed:
             self.result = deepcopy(self.fuild)
+
+        else:
+            print('failed to solve')
+            if input('retruy? (y/n)') == 'y':
+                self.solve()
+
 
 
     def __str__(self) -> str:
@@ -125,7 +131,7 @@ class Fuild:
         if not self.solved:
             self.solve()
 
-        if self.solved:
+        if not self.failed:
             answ = ''
             for i in range(5):
                 for j in range(5):
@@ -137,12 +143,11 @@ class Fuild:
             del self.fuild
             self.solved = False
             return answ
-
-
-        else:
-            return f'lol what; solved = {self.solved}, failed = {self.failed}'
-
         
+        else:
+            self.failed = False
+            return 'can\'t solve given layout\n'
+
             
 
 
@@ -150,7 +155,9 @@ def main():
     obj = Fuild()
     obj.change(0, 0, 1)
     print(obj)
-    obj.change(1, 1, 1)
+    obj.change(0, 1, 1)
+    print(obj)
+    obj.change(0, 1, 2)
     print(obj)
 
 
